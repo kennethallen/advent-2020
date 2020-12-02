@@ -8,6 +8,19 @@ console.log('Data loaded')
 nums.sort((a, b) => a - b)
 console.log('Data sorted')
 
+for (let i = 1; i < nums.length;) {
+  if (nums[i] === nums[i - 1]) {
+    let count = 1
+    while (nums[i] + count === nums[i - 1]) {
+      count++
+    }
+    nums.splice(i, count)
+  } else {
+    i++
+  }
+}
+console.log('Duplicates removed')
+
 for (let l = 0, r = nums.length - 1; l < r;) {
   const sum = nums[l] + nums[r]
   if (sum < 2020) {
@@ -20,6 +33,7 @@ for (let l = 0, r = nums.length - 1; l < r;) {
     r--
   }
 }
+console.log('Part 1 complete')
 
 for (let i = 0; i < nums.length - 2; i++) {
   for (let j = i + 1; j < nums.length - 1; j++) {
@@ -31,3 +45,4 @@ for (let i = 0; i < nums.length - 2; i++) {
     }
   }
 }
+console.log('Part 2 complete')
