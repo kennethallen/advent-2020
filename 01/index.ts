@@ -1,6 +1,7 @@
 import fs from 'fs'
+import path from 'path'
 
-const data = fs.readFileSync('01/input.txt').toString()
+const data = fs.readFileSync(path.join(__dirname, 'input.txt')).toString()
 const lines = data.split(/\r?\n/)
 const nums = lines.map(s => parseInt(s)).filter(i => !isNaN(i))
 console.log('Data loaded')
