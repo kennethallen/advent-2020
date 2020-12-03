@@ -3,7 +3,10 @@ import path from 'path'
 
 const data = fs.readFileSync(path.join(__dirname, 'input.txt')).toString()
 const lines = data.split(/\r?\n/)
-const nums = lines.map(s => parseInt(s)).filter(i => !isNaN(i))
+if (lines[lines.length - 1] === '') {
+  lines.splice(lines.length - 1)
+}
+const nums = lines.map(s => parseInt(s))
 console.log('Data loaded')
 
 nums.sort((a, b) => a - b)
