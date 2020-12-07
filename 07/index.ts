@@ -1,4 +1,5 @@
 import * as fs from 'fs'
+import { sum } from 'lodash'
 import * as path from 'path'
 
 class BagSpec {
@@ -42,6 +43,6 @@ console.log(`Part 1: count possible parent bags of shiny gold ${parents.size}`)
 
 function countInclusive(color: string): number {
   const spec = getOrMake(color)
-  return 1 + [...spec.contains.entries()].map(([c, n]) => n * countInclusive(c)).reduce((a, b) => a + b, 0)
+  return 1 + sum([...spec.contains.entries()].map(([c, n]) => n * countInclusive(c)))
 }
 console.log(`Part 2: count inner bags of shiny gold ${countInclusive('shiny gold') - 1}`)
