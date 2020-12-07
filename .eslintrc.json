@@ -17,6 +17,7 @@
     "rules": {
       "comma-dangle": ["error", "always-multiline"],
       "padded-blocks": "warn",
-      "no-multiple-empty-lines": "warn"
+      "no-multiple-empty-lines": "warn",
+      "space-before-function-paren": "off"
     }
 }
