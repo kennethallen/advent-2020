@@ -15,8 +15,6 @@ console.log('Data loaded')
     if (hit) {
       trees++
     }
-    console.log(`${lines[row].slice(undefined, col)}${hit ? 'X' : 'O'}${lines[row].slice(col + 1)}`)
-
     col = (col + 3) % lines[row].length
   }
   console.log(`Part 1: ${trees} trees hit.`)
@@ -39,4 +37,4 @@ for (const vel of vels) {
   }
   console.log(`Right ${vel.horiz}, down ${vel.vert}: ${vel.trees} trees`)
 }
-console.log(`Product: ${vels.reduce((prod, v) => prod * v.trees, 1)}`)
+console.log(`Part 2: ${vels.reduce((prod, v) => prod * v.trees, 1)}`)
