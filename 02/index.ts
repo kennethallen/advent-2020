@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 
-const data = fs.readFileSync(path.join(__dirname, 'input.txt')).toString()
+const [, data] = fs.readFileSync(path.join(__dirname, 'input.txt')).toString().match(/^(.*?)\r?\n$/s)!
 const entries = data.matchAll(/^(\d+)-(\d+) ([a-z]): ([a-z]+)$/gm)
 console.log('Data loaded')
 

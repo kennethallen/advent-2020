@@ -1,7 +1,7 @@
 import * as fs from 'fs'
 import * as path from 'path'
 
-const data = fs.readFileSync(path.join(__dirname, 'input.txt')).slice(undefined, -1).toString()
+const [, data] = fs.readFileSync(path.join(__dirname, 'input.txt')).toString().match(/^(.*?)\r?\n$/s)!
 const seatIds = data.split(/\r?\n/).map(s => parseInt(s.replace(/F|L/g, '0').replace(/B|R/g, '1'), 2))
 console.log('Data loaded')
 

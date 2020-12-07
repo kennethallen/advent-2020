@@ -16,7 +16,7 @@ function getOrMake(color: string) {
   return spec
 }
 
-const data = fs.readFileSync(path.join(__dirname, 'input.txt')).slice(undefined, -1).toString()
+const [, data] = fs.readFileSync(path.join(__dirname, 'input.txt')).toString().match(/^(.*?)\r?\n$/s)!
 const rules = data.split(/\r?\n/)
 
 rules.forEach(r => {

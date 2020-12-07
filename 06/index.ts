@@ -2,7 +2,7 @@ import * as fs from 'fs'
 import * as path from 'path'
 import { sum, intersection } from 'lodash'
 
-const data = fs.readFileSync(path.join(__dirname, 'input.txt')).slice(undefined, -1).toString()
+const [, data] = fs.readFileSync(path.join(__dirname, 'input.txt')).toString().match(/^(.*?)\r?\n$/s)!
 const groups = data.split(/(?:\r?\n){2}/)
 console.log('Data loaded')
 

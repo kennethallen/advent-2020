@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 
-const data = fs.readFileSync(path.join(__dirname, 'input.txt')).toString()
+const [, data] = fs.readFileSync(path.join(__dirname, 'input.txt')).toString().match(/^(.*?)\r?\n$/s)!
 const lines = data.split(/\r?\n/)
 if (lines[lines.length - 1] === '') {
   lines.splice(lines.length - 1)

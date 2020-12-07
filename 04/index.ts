@@ -1,7 +1,7 @@
 import * as fs from 'fs'
 import * as path from 'path'
 
-const data = fs.readFileSync(path.join(__dirname, 'input.txt')).slice(undefined, -1).toString()
+const [, data] = fs.readFileSync(path.join(__dirname, 'input.txt')).toString().match(/^(.*?)\r?\n$/s)!
 const passports = data.split(/(?:\r?\n){2}/).map(s => {
   const map = new Map<string, string>()
   for (const entry of s.split(/\r?\n| /)) {
