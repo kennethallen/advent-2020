@@ -15,7 +15,7 @@
         "@typescript-eslint"
     ],
     "rules": {
-      "comma-dangle": ["error", "always-multiline"],
+      "comma-dangle": ["error", "only-multiline"],
       "padded-blocks": "warn",
       "no-multiple-empty-lines": "warn",
       "space-before-function-paren": "off"
