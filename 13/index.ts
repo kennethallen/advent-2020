@@ -33,5 +33,5 @@ for (let i = 0; i < buses.length; i++) {
     }
   }
 }
-console.log('Part 2: Plug the following system of equations into any Chinese remainder theorem solver:')
+console.log('Part 2: Plug the following system of equivalences into any Chinese remainder theorem solver:')
 buses.forEach(({ id, offset }) => console.log(`x ≡ ${(id - (offset % id)) % id} (mod ${id})`))
