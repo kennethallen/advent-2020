@@ -35,6 +35,7 @@
     "typescript": "^4.1.3"
   },
   "dependencies": {
+    "bitset": "^5.1.1",
     "lodash": "^4.17.20"
   }
 }
