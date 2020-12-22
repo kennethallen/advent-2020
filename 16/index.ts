@@ -1,6 +1,5 @@
-import * as fs from 'fs'
 import { range, sum } from 'lodash'
-import * as path from 'path'
+import { loadInput, product } from '../util'
 
 class Range {
   // eslint-disable-next-line no-useless-constructor
@@ -10,7 +9,7 @@ class Range {
   }
 }
 
-const [, data] = fs.readFileSync(path.join(__dirname, 'input.txt')).toString().match(/^(.*?)\r?\n$/s)!
+const data = loadInput(__dirname)
 const [fieldData, ticketData] = data.split(/(?:\r?\n){2}your ticket:\r?\n/)
 const [myTickData, nearTicksData] = ticketData.split(/(?:\r?\n){2}nearby tickets:\r?\n/)
 const fields = new Map<string, Range[]>()
@@ -33,22 +32,18 @@ const unknownPos = new Map<number, Set<string>>()
 range(validTicks[0].length).forEach(i => unknownPos.set(i, new Set(fields.keys())))
 const knownPos = new Map<number, string>()
 function ruleOut(i: number, f: string) {
-  console.log(`Eliminating position ${i} field `, f, ' ', fields.get(f))
   const posFields = unknownPos.get(i)!
   posFields.delete(f)
   if (posFields.size === 1) {
     const defField = [...posFields][0]!
-    console.log(`Pos ${i} is certainly ${defField}`)
     unknownPos.delete(i)
     knownPos.set(i, defField);
     [...unknownPos.entries()].filter(([, s]) => s.has(defField)).forEach(([i0]) => ruleOut(i0, defField))
   }
 }
 for (const tick of validTicks) {
-  for (const [i, possibleFields] of unknownPos.entries()) {
-    for (const elimField of [...possibleFields].filter(f => !fields.get(f)!.some(r => r.has(tick[i])))) {
-      ruleOut(i, elimField)
-    }
-  }
+  unknownPos.forEach((possibleFields, i) =>
+    [...possibleFields].filter(f => !fields.get(f)!.some(r => r.has(tick[i]))).forEach(f => ruleOut(i, f))
+  )
 }
-console.log(`Part 2: product of departure fields ${myTick.filter((_, i) => knownPos.get(i)!.startsWith('departure')).reduce((a, b) => a * b, 1)}`)
+console.log(`Part 2: product of departure fields ${product(myTick.filter((_, i) => knownPos.get(i)!.startsWith('departure')))}`)

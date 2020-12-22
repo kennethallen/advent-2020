@@ -1,9 +1,8 @@
-import * as fs from 'fs'
 import { sum } from 'lodash'
-import * as path from 'path'
+import { loadInput } from '../util'
 const { Parser } = require('jison')
 
-const [, data] = fs.readFileSync(path.join(__dirname, 'input.txt')).toString().match(/^(.*?)\r?\n$/s)!
+const data = loadInput(__dirname)
 const lines = data.split(/\r?\n/)
 console.log('Data loaded')
 

@@ -1,7 +1,6 @@
-import * as fs from 'fs'
-import * as path from 'path'
+import { loadInput } from '../util'
 
-const [, data] = fs.readFileSync(path.join(__dirname, 'input.txt')).toString().match(/^(.*?)\r?\n$/s)!
+const data = loadInput(__dirname)
 const passports = data.split(/(?:\r?\n){2}/).map(s => {
   const map = new Map<string, string>()
   for (const entry of s.split(/\r?\n| /)) {
@@ -12,8 +11,9 @@ const passports = data.split(/(?:\r?\n){2}/).map(s => {
 })
 console.log('Data loaded')
 
+// eslint-disable-next-line func-call-spacing
 const validators = new Map<string, (val: string) => boolean>()
-function r (l: number, h: number) {
+function r(l: number, h: number) {
   return (v: string) => {
     const n = parseInt(v)
     return !isNaN(n) && n >= l && n <= h
@@ -31,19 +31,8 @@ validators.set('hcl', v => /^#[\da-f]{6}$/.test(v))
 validators.set('ecl', v => /^amb|blu|brn|gry|grn|hzl|oth$/.test(v))
 validators.set('pid', v => /^\d{9}$/.test(v))
 
-let valid1 = 0
-let valid2 = 0
-for (const passport of passports) {
-  if ([...validators.keys()].every(f => passport.has(f))) {
-    valid1++
-  }
-
-  if ([...validators.entries()].every(([field, validator]) => {
-    const value = passport.get(field)
-    return value && validator(value)
-  })) {
-    valid2++
-  }
-}
-console.log(`Part 1: ${valid1} valid passports out of ${passports.length}`)
-console.log(`Part 2: ${valid2} valid passports out of ${passports.length}`)
+console.log(`Part 1: ${passports.filter(passport => [...validators.keys()].every(f => passport.has(f))).length} valid passports out of ${passports.length}`)
+console.log(`Part 2: ${passports.filter(passport => [...validators.entries()].every(([field, validator]) => {
+  const value = passport.get(field)
+  return value && validator(value)
+})).length} valid passports out of ${passports.length}`)

@@ -1,5 +1,4 @@
-import * as fs from 'fs'
-import * as path from 'path'
+import { loadInput } from '../util'
 
 abstract class Rule {
   abstract match(s: string): string[]
@@ -48,7 +47,7 @@ function doPart(part: number) {
   console.log(`Part ${part}: messages matching rule 0 ${msgs.filter(msg => rules.get(0)!.match(msg).includes('')).length}`)
 }
 
-const [, data] = fs.readFileSync(path.join(__dirname, 'input.txt')).toString().match(/^(.*?)\r?\n$/s)!
+const data = loadInput(__dirname)
 const [rulesData, msgData] = data.split(/(?:\r?\n){2}/)
 const msgs = msgData.split(/\r?\n/)
 const rulesLines = rulesData.split(/\r?\n/)

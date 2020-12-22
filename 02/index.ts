@@ -1,37 +1,19 @@
-import fs from 'fs'
-import path from 'path'
+import { loadInput } from '../util'
 
-const [, data] = fs.readFileSync(path.join(__dirname, 'input.txt')).toString().match(/^(.*?)\r?\n$/s)!
-const entries = data.matchAll(/^(\d+)-(\d+) ([a-z]): ([a-z]+)$/gm)
+interface Entry {
+  n0: number
+  n1: number
+  char: string
+  pw: string
+}
+
+const data = loadInput(__dirname)
+const entries: Entry[] = [...data.matchAll(/^(\d+)-(\d+) ([a-z]): ([a-z]+)$/gm)]
+  .map(([, s0, s1, char, pw]) => ({ char, pw, n0: parseInt(s0), n1: parseInt(s1) }))
 console.log('Data loaded')
 
-let correct1 = 0
-let incorrect1 = 0
-let correct2 = 0
-let incorrect2 = 0
-for (const entry of entries) {
-  const n0 = parseInt(entry[1])
-  const n1 = parseInt(entry[2])
-  const char = entry[3]
-  const pw = entry[4]
-
-  let count = 0
-  for (const c of pw) {
-    if (c === char) {
-      count++
-    }
-  }
-  if (count < n0 || count > n1) {
-    incorrect1++
-  } else {
-    correct1++
-  }
-
-  if ((pw[n0 - 1] === char) !== (pw[n1 - 1] === char)) {
-    correct2++
-  } else {
-    incorrect2++
-  }
-}
-console.log(`Part 1: ${correct1} correct, ${incorrect1} incorrect`)
-console.log(`Part 2: ${correct2} correct, ${incorrect2} incorrect`)
+console.log(`Part 1: ${entries.filter(({ n0, n1, char, pw }) => {
+  const count = [...pw].filter(c => c === char).length
+  return count >= n0 && count <= n1
+}).length} correct`)
+console.log(`Part 2: ${entries.filter(({ n0, n1, char, pw }) => (pw[n0 - 1] === char) !== (pw[n1 - 1] === char)).length} correct`)

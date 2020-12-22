@@ -1,27 +1,23 @@
-import * as fs from 'fs'
-import { range, sum } from 'lodash'
-import * as path from 'path'
+import { initial, last, range, sum, tail, zip } from 'lodash'
+import { loadInput } from '../util'
 
-const [, data] = fs.readFileSync(path.join(__dirname, 'input.txt')).toString().match(/^(.*?)\r?\n$/s)!
+const data = loadInput(__dirname)
 const adapters = data.split(/\r?\n/).map(s => parseInt(s))
 console.log('Data loaded')
 
 adapters.sort((a, b) => a - b)
 
 const diffCounts = new Map<number, number>()
-const joltages = [0, ...adapters, adapters[adapters.length - 1] + 3]
-for (let i = 1; i < joltages.length; i++) {
-  const diff = joltages[i] - joltages[i - 1]
+const joltages = [0, ...adapters, last(adapters)! + 3]
+for (const [a, b] of zip(initial(joltages), tail(joltages))) {
+  const diff = b! - a!
   diffCounts.set(diff, (diffCounts.get(diff) ?? 0) + 1)
 }
 console.log(`Part 1: diff counts ${[...diffCounts.entries()]}, count(1) * count(3) = ${(diffCounts.get(1) ?? 0) * (diffCounts.get(3) ?? 0)}`)
 
 const paths = new Map<number, number>()
 paths.set(0, 1)
-for (let i = 1; i < joltages.length; i++) {
-  paths.set(joltages[i],
-    sum(range(joltages[i] - 3, joltages[i]).map(i => paths.get(i)))
-  )
+for (const joltage of tail(joltages)) {
+  paths.set(joltage, sum(range(joltage - 3, joltage).map(i => paths.get(i))))
 }
-console.log(...paths.entries())
-console.log(`Part 2: path count ${paths.get(joltages[joltages.length - 1])}`)
+console.log(`Part 2: path count ${paths.get(last(joltages)!)}`)

@@ -1,6 +1,5 @@
-import * as fs from 'fs'
 import { sum } from 'lodash'
-import * as path from 'path'
+import { loadInput } from '../util'
 
 class BagSpec {
   contains = new Map<string, number>()
@@ -16,11 +15,11 @@ function getOrMake(color: string) {
   return spec
 }
 
-const [, data] = fs.readFileSync(path.join(__dirname, 'input.txt')).toString().match(/^(.*?)\r?\n$/s)!
+const data = loadInput(__dirname)
 const rules = data.split(/\r?\n/)
 
 rules.forEach(r => {
-  const color = r.match(/^(.*) bags contain/)![1]
+  const [, color] = r.match(/^(.*) bags contain/)!
   const spec = getOrMake(color)
   for (const [, count, otherColor] of r.matchAll(/(\d+) (.*?) bags?/g)) {
     spec.contains.set(otherColor, parseInt(count))

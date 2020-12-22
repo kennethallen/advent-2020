@@ -1,11 +1,8 @@
-import fs from 'fs'
-import path from 'path'
+import { range } from 'lodash'
+import { loadInput } from '../util'
 
-const [, data] = fs.readFileSync(path.join(__dirname, 'input.txt')).toString().match(/^(.*?)\r?\n$/s)!
+const data = loadInput(__dirname)
 const lines = data.split(/\r?\n/)
-if (lines[lines.length - 1] === '') {
-  lines.splice(lines.length - 1)
-}
 const nums = lines.map(s => parseInt(s))
 console.log('Data loaded')
 
@@ -32,21 +29,18 @@ for (let l = 0, r = nums.length - 1; l < r;) {
   } else if (sum > 2020) {
     r--
   } else {
-    console.log(`${nums[l]} * ${nums[r]} = ${nums[l] * nums[r]}`)
+    console.log(`Part 1: ${nums[l]} * ${nums[r]} = ${nums[l] * nums[r]}`)
     l++
     r--
   }
 }
-console.log('Part 1 complete')
 
-for (let i = 0; i < nums.length - 2; i++) {
-  for (let j = i + 1; j < nums.length - 1; j++) {
-    for (let k = j + 1; k < nums.length; k++) {
-      const sum = nums[i] + nums[j] + nums[k]
-      if (sum === 2020) {
-        console.log(`${nums[i]} * ${nums[j]} * ${nums[k]} = ${nums[i] * nums[j] * nums[k]}`)
+for (const i of range(nums.length - 2)) {
+  for (const j of range(i + 1, nums.length - 1)) {
+    for (const k of range(j + 1, nums.length)) {
+      if (nums[i] + nums[j] + nums[k] === 2020) {
+        console.log(`Part 2: ${nums[i]} * ${nums[j]} * ${nums[k]} = ${nums[i] * nums[j] * nums[k]}`)
       }
     }
   }
 }
-console.log('Part 2 complete')

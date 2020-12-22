@@ -1,16 +1,15 @@
-import * as fs from 'fs'
-import * as path from 'path'
+import { range } from "lodash"
+import { loadInput } from '../util'
 
-const [, data] = fs.readFileSync(path.join(__dirname, 'input.txt')).toString().match(/^(.*?)\r?\n$/s)!
+const data = loadInput(__dirname)
 const start = data.split(/\r?\n/).map(s => parseInt(s))
 console.log('Data loaded')
 
 const thresholds = [2020, 30000000]
-const maxThreshold = Math.max(...thresholds)
 
 let lastSayAge: number | undefined
 const lastSayRounds = new Map<number, number>()
-for (let round = 0; round < maxThreshold; round++) {
+for (const round of range(Math.max(...thresholds))) {
   const said = start[round] ?? lastSayAge ?? 0
   const lastSayRound = lastSayRounds.get(said)
   lastSayAge = lastSayRound === undefined ? undefined : round - lastSayRound

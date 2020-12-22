@@ -1,14 +1,15 @@
 /* eslint-disable no-labels */
-import * as fs from 'fs'
-import * as path from 'path'
+import { range, take } from 'lodash'
+import { loadInput } from '../util'
 
-const [, data] = fs.readFileSync(path.join(__dirname, 'input.txt')).toString().match(/^(.*?)\r?\n$/s)!
+const data = loadInput(__dirname)
 const ns = data.split(/\r?\n/).map(s => parseInt(s))
 console.log('Data loaded')
 
 const WindowSize = 25
 
 function invalid(n: number) {
+  console.log(`Part 1: datum ${n} is invalid`)
   let lo = 0
   let hi = 0
   let sum = 0
@@ -25,8 +26,8 @@ function invalid(n: number) {
   console.log(`Part 2: ${n} = sum(${range}) (min ${Math.min(...range)}, max ${Math.max(...range)}, sum ${Math.min(...range) + Math.max(...range)})`)
 }
 
-const addends = new Set(ns.slice(undefined, WindowSize))
-for (let i = WindowSize; i < ns.length; i++) {
+const addends = new Set(take(ns, WindowSize))
+for (const i of range(WindowSize, ns.length)) {
   const n = ns[i]
   check: {
     for (const a of addends) {
@@ -34,7 +35,6 @@ for (let i = WindowSize; i < ns.length; i++) {
         break check
       }
     }
-    console.log(`Part 1: datum #${i} (${n}) is invalid`)
     invalid(n)
   }
   addends.delete(ns[i - WindowSize])

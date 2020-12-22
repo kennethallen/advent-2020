@@ -1,12 +1,12 @@
-import * as fs from 'fs'
-import * as path from 'path'
+import { range } from 'lodash'
+import { loadInput } from '../util'
 
 interface Instruction {
   op: string
   arg: number
 }
 
-const [, data] = fs.readFileSync(path.join(__dirname, 'input.txt')).toString().match(/^(.*?)\r?\n$/s)!
+const data = loadInput(__dirname)
 const code: Instruction[] = data.split(/\r?\n/).map(s => {
   const [, op, arg] = s.match(/^(nop|acc|jmp) ([+-]\d+)$/)!
   return { op, arg: parseInt(arg) }
@@ -39,7 +39,7 @@ function emulate() {
   console.log(`Part 1: instruction #${line} repeated, acc=${acc}`)
 }
 
-for (let i = 0; i < code.length; i++) {
+for (const i of range(code.length)) {
   if (code[i].op !== 'acc') {
     code[i].op = code[i].op === 'nop' ? 'jmp' : 'nop'
 

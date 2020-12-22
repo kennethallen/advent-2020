@@ -1,11 +1,6 @@
-import * as fs from 'fs'
-import { chunk, range, sum, times } from 'lodash'
-import * as path from 'path'
 import BitSet from 'bitset'
-
-function product(ns: number[]) {
-  return ns.reduce((a, b) => a * b, 1)
-}
+import { range, sum, times } from 'lodash'
+import { loadInput } from '../util'
 
 class State {
   public bits = new BitSet()
@@ -17,7 +12,7 @@ class State {
 
   bitIndex(coords: number[]) {
     let index = 0
-    for (let i = coords.length - 1; i >= 0; i--) {
+    for (const i of range(coords.length)) {
       const offset = coords[i] + this.offsets[i]
       if (offset < 0 || offset >= this.dims[i]) {
         return undefined
@@ -63,25 +58,21 @@ class State {
       range(this.dims[coords.length]).forEach(n => this.fillFromPrev(old, [...coords, n - this.offsets[coords.length]]))
     }
   }
-
-  toString3D() {
-    return chunk(range(product(this.dims)).map(n => this.bits.get(n)), this.dims[0] * this.dims[1]).map(slice => chunk(slice, this.dims[1]).map(row => row.map(n => n === 1 ? '#' : '.').join('')).join('\n')).join('\n\n')
-  }
 }
 
-const [, data] = fs.readFileSync(path.join(__dirname, 'input.txt')).toString().match(/^(.*?)\r?\n$/s)!
+const data = loadInput(__dirname)
 const lines = data.split(/\r?\n/)
 console.log('Data loaded')
 
 function doPart(part: number, dim: number) {
   const init = new State([lines.length, lines[0].length, ...times(dim - 2, () => 1)], times(dim, () => 0))
-  lines.forEach((s, x) => {
+  lines.forEach((s, x) =>
     [...s].forEach((c, y) => {
       if (c === '#') {
         init.set([x, y, ...times(dim - 2, () => 0)])
       }
     })
-  })
+  )
 
   let state = init
   for (let i = 0; i < 6; i++) {

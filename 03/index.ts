@@ -1,23 +1,21 @@
-import fs from 'fs'
-import path from 'path'
+import { map, range } from 'lodash'
+import { loadInput, product } from '../util'
 
-const [, data] = fs.readFileSync(path.join(__dirname, 'input.txt')).toString().match(/^(.*?)\r?\n$/s)!
+const data = loadInput(__dirname)
 const lines = data.split(/\r?\n/)
-if (lines[lines.length - 1] === '') {
-  lines.splice(lines.length - 1)
-}
 console.log('Data loaded')
 
 {
   let trees = 0
-  for (let row = 0, col = 0; row < lines.length; row++) {
-    const hit = lines[row][col] === '#'
+  let colIdx = 0
+  for (const row of lines) {
+    const hit = row[colIdx] === '#'
     if (hit) {
       trees++
     }
-    col = (col + 3) % lines[row].length
+    colIdx = (colIdx + 3) % row.length
   }
-  console.log(`Part 1: ${trees} trees hit.`)
+  console.log(`Part 1: ${trees} trees hit`)
 }
 
 const vels = [
@@ -29,12 +27,13 @@ const vels = [
 ].map(v => ({ ...v, trees: 0 }))
 for (const vel of vels) {
   vel.trees = 0
-  for (let row = 0, col = 0; row < lines.length; row += vel.vert) {
-    if (lines[row][col] === '#') {
+  let colIdx = 0
+  for (const row of range(0, lines.length, vel.vert).map(i => lines[i])) {
+    if (row[colIdx] === '#') {
       vel.trees++
     }
-    col = (col + vel.horiz) % lines[row].length
+    colIdx = (colIdx + vel.horiz) % row.length
   }
   console.log(`Right ${vel.horiz}, down ${vel.vert}: ${vel.trees} trees`)
 }
-console.log(`Part 2: ${vels.reduce((prod, v) => prod * v.trees, 1)}`)
+console.log(`Part 2: ${product(map(vels, 'trees'))}`)

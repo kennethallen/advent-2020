@@ -1,14 +1,17 @@
-import * as fs from 'fs'
 import { sum } from 'lodash'
-import * as path from 'path'
+import { loadInput } from '../util'
 
-const [, data] = fs.readFileSync(path.join(__dirname, 'input.txt')).toString().match(/^(.*?)\r?\n$/s)!
+const data = loadInput(__dirname)
 const lines = data.split(/\r?\n/)
 console.log('Data loaded')
 
 function decodeLine(line: string) {
-  const [, mask, addr, val] = line.match(/mask = ([10X]{36})|mem\[(\d+)\] = (\d+)/)!
+  const [, mask, addr, val] = line.match(/^mask = ([10X]{36})|mem\[(\d+)\] = (\d+)$/)!
   return { mask, addr, val }
+}
+
+function bitMask(i: number) {
+  return BigInt(1) << BigInt(36 - 1 - i)
 }
 
 {
@@ -20,11 +23,11 @@ function decodeLine(line: string) {
     if (mask) {
       maskOn = BigInt(0)
       maskOff = BigInt(0)
-      for (let i = 0; i < mask.length; i++) {
-        if (mask[i] === '1') {
-          maskOn |= BigInt(1) << BigInt(36 - 1 - i)
-        } else if (mask[i] === '0') {
-          maskOff |= BigInt(1) << BigInt(36 - 1 - i)
+      for (const [i, char] of [...mask].entries()) {
+        if (char === '1') {
+          maskOn |= bitMask(i)
+        } else if (char === '0') {
+          maskOff |= bitMask(i)
         }
       }
       maskOff ^= (BigInt(1) << BigInt(36)) - BigInt(1) // 36 1s
@@ -46,9 +49,9 @@ function decodeLine(line: string) {
       fluxMasks = []
       for (let i = 0; i < mask.length; i++) {
         if (mask[i] === '1') {
-          maskOn |= BigInt(1) << BigInt(36 - 1 - i)
+          maskOn |= bitMask(i)
         } else if (mask[i] === 'X') {
-          fluxMasks.push(BigInt(1) << BigInt(36 - 1 - i))
+          fluxMasks.push(bitMask(i))
         }
       }
     } else {

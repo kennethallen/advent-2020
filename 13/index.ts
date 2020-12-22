@@ -1,32 +1,24 @@
-import * as fs from 'fs'
 import { minBy } from 'lodash'
-import * as path from 'path'
+import { loadInput, gcd } from '../util'
 
-const [, data] = fs.readFileSync(path.join(__dirname, 'input.txt')).toString().match(/^(.*?)\r?\n$/s)!
-const lines = data.split(/\r?\n/)
-const earliestDepart = parseInt(lines[0])
-const buses = lines[1].split(',').map((b, offset) => ({ id: parseInt(b), offset })).filter(({ id }) => !isNaN(id))
+interface Bus {
+  id: number
+  offset: number
+}
+
+const data = loadInput(__dirname)
+const [earliestDepartData, busesData] = data.split(/\r?\n/)
+const earliestDepart = parseInt(earliestDepartData)
+const buses: Bus[] = busesData.split(',').map((b, offset) => ({ id: parseInt(b), offset })).filter(({ id }) => !isNaN(id))
 console.log('Data loaded')
 
 {
-  const { id, depart } = minBy(buses.map(({ id }) => ({ id, depart: Math.ceil(earliestDepart / id) * id })), ({ depart }) => depart)!
+  const { id, depart } = minBy(buses.map(({ id }) => ({ id, depart: Math.ceil(earliestDepart / id) * id })), b => b.depart)!
   console.log(`Part 1: ${id} * (${depart} - ${earliestDepart}) = ${id * (depart - earliestDepart)}`)
 }
 
-function gcd(x: number, y: number) {
-  x = Math.abs(x)
-  y = Math.abs(y)
-  while (y) {
-    const t = y
-    y = x % y
-    x = t
-  }
-  return x
-}
-
 // Confirm IDs are pairwise coprime, otherwise no (general) solution
-for (let i = 0; i < buses.length; i++) {
-  const a = buses[i].id
+for (const [i, { id: a }] of buses.entries()) {
   for (const { id: b } of buses.slice(i + 1)) {
     if (gcd(a, b) !== 1) {
       throw new Error(`All IDs must be pairwise coprime: ${a}, ${b}`)

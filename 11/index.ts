@@ -1,12 +1,9 @@
-import * as fs from 'fs'
-import { range } from 'lodash'
-import * as path from 'path'
+import { isEqual, range } from 'lodash'
+import { loadInput } from '../util'
 
 class Seats {
-  rows: string[][]
-  constructor(rows: string[][]) {
-    this.rows = rows
-  }
+  // eslint-disable-next-line no-useless-constructor
+  constructor(public rows: string[][]) {}
 
   isOccup([i, j]: number[]) {
     return this.rows[i][j] === '#'
@@ -54,29 +51,18 @@ class Seats {
     }).length
   }
 
-  equals(s: Seats) {
-    return this.rows.length === s.rows.length && range(this.rows.length).every(i =>
-      this.rows[i].length === s.rows[i].length && range(this.rows[i].length).every(j =>
-        this.rows[i][j] === s.rows[i][j]
-      )
-    )
-  }
-
   stabilize(ruleset: 1 | 2) {
     let next: Seats = this
     let prev
     do {
       prev = next
       next = prev.step(ruleset)
-      if (next.equals(prev)) {
-        break
-      }
-    } while (!next.equals(prev))
+    } while (!isEqual(next, prev))
     return next
   }
 }
 
-const [, data] = fs.readFileSync(path.join(__dirname, 'input.txt')).toString().match(/^(.*?)\r?\n$/s)!
+const data = loadInput(__dirname)
 const init = new Seats(data.split(/\r?\n/).map(s => [...s]))
 console.log('Data loaded')
 

@@ -1,14 +1,17 @@
-import * as fs from 'fs'
-import * as path from 'path'
+import { loadInput } from '../util'
 
 interface Instruction {
   code: string
   value: number
 }
 
-const [, data] = fs.readFileSync(path.join(__dirname, 'input.txt')).toString().match(/^(.*?)\r?\n$/s)!
+function toRadians(deg: number) {
+  return deg * Math.PI / 180
+}
+
+const data = loadInput(__dirname)
 const insts: Instruction[] = data.split(/\r?\n/).map(s => {
-  const [, code, value] = s.match(/([NSEWLRF])(\d+)/)!
+  const [, code, value] = s.match(/^([NSEWLRF])(\d+)$/)!
   return { code, value: parseInt(value) }
 })
 console.log('Data loaded')
@@ -49,8 +52,10 @@ console.log('Data loaded')
       // eslint-disable-next-line no-fallthrough
       case 'L':
         {
-          const nwx = wx * Math.cos(value * Math.PI / 180) - wy * Math.sin(value * Math.PI / 180)
-          wy = wx * Math.sin(value * Math.PI / 180) + wy * Math.cos(value * Math.PI / 180)
+          const cos = Math.cos(toRadians(value))
+          const sin = Math.sin(toRadians(value))
+          const nwx = wx * cos - wy * sin
+          wy = wx * sin + wy * cos
           wx = nwx
         }
         break
