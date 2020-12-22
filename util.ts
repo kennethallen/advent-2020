@@ -16,6 +16,16 @@ export function gcd(x: number, y: number) {
   return x
 }
 
+export function rotated<T>(a: T[], n: number) {
+  return [...a.slice(-n), ...a.slice(0, -n)]
+}
+
+export function swap<T>(a: T[], i0: number, i1: number) {
+  const temp = a[i0]
+  a[i0] = a[i1]
+  a[i1] = temp
+}
+
 export function loadInput(dirname: string) {
   return fs.readFileSync(path.join(dirname, 'input.txt')).toString().match(/^(.*?)\r?\n$/s)![1]
 }
