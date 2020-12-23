@@ -21,9 +21,7 @@ export function rotated<T>(a: T[], n: number) {
 }
 
 export function swap<T>(a: T[], i0: number, i1: number) {
-  const temp = a[i0]
-  a[i0] = a[i1]
-  a[i1] = temp
+  [a[i1], a[i0]] = [a[i0], a[i1]]
 }
 
 export function loadInput(dirname: string) {
