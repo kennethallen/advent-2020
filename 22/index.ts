@@ -1,5 +1,5 @@
 /* eslint-disable no-labels */
-import { cloneDeep, intersection, max, maxBy, minBy, range, sum, times, without } from 'lodash'
+import { cloneDeep, max, maxBy, range, sum } from 'lodash'
 import { loadInput } from '../util'
 
 const data = loadInput(__dirname)
