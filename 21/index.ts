@@ -1,4 +1,3 @@
-/* eslint-disable no-labels */
 import { intersection, without } from 'lodash'
 import { loadInput } from '../util'
 

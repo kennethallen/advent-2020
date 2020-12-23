@@ -1,4 +1,3 @@
-/* eslint-disable no-labels */
 import { cloneDeep, max, maxBy, range, sum } from 'lodash'
 import { loadInput } from '../util'
 
